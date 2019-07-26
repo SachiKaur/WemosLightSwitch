@@ -1,0 +1,9 @@
+{
+    "FirebaseConfig": {
+        "apiKey": "AIzaSyBwtBeIywtPvq535wD5xiVfsTxGTjQMPfU",
+        "authDomain": "notifbyassistant.firebaseapp.com",
+        "projectId": "notifbyassistant",
+        "databaseURL": "https://notifbyassistant.firebaseio.com",
+        "storageBucket": "notifbyassistant.appspot.com"
+    }
+}

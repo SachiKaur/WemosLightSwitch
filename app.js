@@ -1,7 +1,7 @@
 var express = require("express");
 var app = express();
 var firebase = require('firebase');
-import config from './config.js'
+var config = require('./config.json');
 
 firebase.initializeApp(config.FirebaseConfig);
 var db= firebase.database();
