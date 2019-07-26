@@ -1,34 +1,10 @@
 var express = require("express");
-var request = require('request');
-var nodemailer = require('nodemailer');
 var app = express();
+var firebase = require('firebase');
+import config from './config.js'
 
-var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'YOUR_EMAIL',
-      pass: 'PASSWORD'
-    }
-  });
-  
-function sendMessage(subject,message)
-{
-    var mailOptions = {
-        from: 'FROM',
-        to: 'TO',
-        subject: subject,
-        text: message,
-    }
-
-    transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-        });
-}
-  
+firebase.initializeApp(config.FirebaseConfig);
+var db= firebase.database();
 
 app.get("/api/light/:id/:state", function(req, res) {
     var id = req.params.id;
@@ -36,16 +12,15 @@ app.get("/api/light/:id/:state", function(req, res) {
     console.log(id + " " + state);
 
     if (id == 1){
-        request('http://IP_ADDRESS/light?param='+state, function (error, response, body) {
-            if (error) {
-                res.json(error);
-                sendMessage("Something went wrong with Light 1","Check the battery!");
-            }
-            else {
-                res.json(body);
-            }
-        }); 
+        var ref = db.ref("wemosLightSwitch/one/commands");
+
+        ref.push().set({
+            time: firebase.database.ServerValue.TIMESTAMP,
+            state: state
+          });
+
     }
+    res.send('Command added to the queue.')
 });
 
 app.listen(3000, function() {

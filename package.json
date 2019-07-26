@@ -1,0 +1,24 @@
+{
+  "name": "miniwemoslight",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SachiKaur/MiniWemosLight.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SachiKaur/MiniWemosLight/issues"
+  },
+  "homepage": "https://github.com/SachiKaur/MiniWemosLight#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase": "^6.0.2",
+    "nodemailer": "^6.3.0"
+  }
+}
