@@ -1,14 +1,18 @@
 #include <Servo.h>
+#include <ArduinoJson.h>
+#include <FirebaseArduino.h>
 #include "ESP8266WiFi.h"
-#include <aREST.h>
 
-const char* ssid = WIFI_NAME;
-const char* password = WIFI_PASSWORD;
+#define durationSleep  600
+#define NB_TRYWIFI     3
+#define url ""
+#define database ""
+#define secret ""
 
-aREST rest = aREST();
+const char* ssid = "";
+const char* password = "";
 
 WiFiServer server(80);
-
 
 Servo myservo;  // create servo object to control a servo
 
@@ -48,39 +52,35 @@ void setup() {
   delay(20); 
   
   WiFi.begin(ssid, password);
-
-  rest.function("light", turn_light);
-  rest.set_id("1");
-  rest.set_name("MiniWemosLights");
   
-  
+  int _try = 0;
   while (WiFi.status() != WL_CONNECTED) {
+    Serial.print("..");
     delay(500);
-    Serial.print(".");
+    _try++;
+    if ( _try >= NB_TRYWIFI ) {
+        Serial.println("Impossible to connect WiFi network, go to deep sleep");
+        ESP.deepSleep(durationSleep * 1000000);
+    }
   }
-  Serial.println("");
-  Serial.println("WiFi connected");
+  
+  Serial.println("Connected to the WiFi network");
+  Serial.print ( "IP address: " );
+  Serial.println ( WiFi.localIP() );
 
+  Firebase.begin(database, secret);
+  FirebaseObject object = Firebase.get(url);
+  JsonObject& obj = object.getJsonVariant();
 
-  server.begin();
-  Serial.println("Server started");
+  for (JsonObject::iterator it=obj.begin(); it!=obj.end(); ++it)
+  { 
+    turn_light(Firebase.getString(url + String(it->key) + "/state"));
+  }
 
-  Serial.println(WiFi.localIP());
+  Firebase.remove(url);
+  
+  ESP.deepSleep(durationSleep * 1000000);
 }
 
 void loop() {
-  /*light_on();
-  delay(5000);
-  light_off();
-  delay(5000);*/
-
-  WiFiClient client = server.available();
-  if (!client) {
-    return;
-  }
-  while(!client.available()){
-    delay(1);
-  }
-  rest.handle(client);
 }
-
