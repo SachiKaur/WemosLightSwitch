@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/SachiKaur/MiniWemosLight#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "firebase": "^6.0.2",
     "nodemailer": "^6.3.0"
   }
